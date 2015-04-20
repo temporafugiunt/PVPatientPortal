@@ -1,0 +1,34 @@
+﻿@using System.Web.Optimization
+@using ngPVM.Web.Helpers.Common
+
+@helper AddNgResourcesIfNgApp(string ngAppName)
+{
+    if (!ngAppName.IsNullOrEmpty())
+    {
+        @Scripts.Render("~/scripts/angular")
+        @Scripts.Render("~/js/pvCommon")
+        <script>
+            commonApp.provider('pvResources', function () {
+                // Save your function scope.
+                var myThis = this;
+                
+                // define your services and properties.
+                this.addWebsiteBasePath = function (resourcePath) {
+                    var basePath = '@HtmlHelpers.WebsiteBasePath()';
+                    if (resourcePath.charAt(0) === '/') {
+                        resourcePath = resourcePath.substr(1);
+                    }
+                    return (basePath + resourcePath);
+                };
+                this.apiBaseURL = function () { return '@HtmlHelpers.PvApiBaseURL()'; };
+                // Yes, we could get this from $rootElement.attr('ng-app') but this seems cleaner don't you think?
+                this.activeNgApp = '@ngAppName';
+                this.$get = function () {
+                        // Pass your original scope.
+                        return myThis;
+                    };
+                });
+        </script>
+        @Scripts.Render("~/js/" + ngAppName)
+    }
+};

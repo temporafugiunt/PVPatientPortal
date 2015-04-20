@@ -1,0 +1,331 @@
+﻿<div class="row">
+    <div class="widget-box col-xs-12">
+        <div class="widget-header widget-header-flat">
+            <h4>Basic CORS Test Patient Portal API</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <p>Calling RESTful API: <b>{{apiHost}}</b></p>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <p>This call demonstrates Patient Portal API <b>CORS enalbed</b> calling <b>without header authentication</b>.</p>
+                <p>{{versionInformation}}</p>
+            </div>
+        </div>
+
+        <div class="widget-header widget-header-flat">
+            <h4>Virtual Encounter Available Patients</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+
+                <form name="patientList" class="form-horizontal panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="practice" class="col-lg-3 col-md-3 col-sm-3 control-label">Practice</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="practice" name="practice" placeholder="Practice" required ng-model="currentPatientList.practice" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clinic" class="col-lg-3 col-md-3 col-sm-3 control-label">Clinic</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="clinic" name="clinic" placeholder="Clinic or Blank" ng-model="currentPatientList.clinic" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="service-date" class="col-lg-3 col-md-3 col-sm-3 control-label">Service Date</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="service-date" name="service-date" placeholder="Service Date" required ng-model="currentPatientList.serviceDate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <button type="submit" class="btn btn-primary pull-right" ng-disabled="patientList.$invalid" ng-click="getCurrentPatients()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <p>This call demonstrates MedPod API <b>CORS enabled</b> calling <b>with header authentication to return a list of patients given the practice and clinic specified above</b>.</p>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th colspan="11">Data for Practice {{currentPatientList.availableVirtualEncounterPatients.practices[0].practice}} retrieved {{currentPatientList.lastOperationTime}}</th>
+                        </tr>
+                    </tbody>
+                    <tbody ng-repeat="clinic in currentPatientList.availableVirtualEncounterPatients.practices[0].clinics">
+                        <tr>
+                            <th colspan="11">{{clinic.clinicName}} - {{clinic.description}}</th>
+                        </tr>
+                        <tr>
+                            <th>Pat #</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Preferred Name</th>
+                            <th>Time In</th>
+                            <th>Sex</th>
+                            <th>Age</th>
+                            <th>Room #</th>
+                            <th>Visit Type</th>
+                            <th>MedPod ID</th>
+                            <th>Log Detail PK</th>
+                        </tr>
+                        <tr ng-repeat="patient in clinic.currentPatients">
+                            <td>{{patient.patNum}}</td>
+                            <td>{{patient.firstName}}</td>
+                            <td>{{patient.lastName}}</td>
+                            <td>{{patient.preferredName}}</td>
+                            <td>{{asProperDateTime(patient.timeIn)}}</td>
+                            <td>{{patient.sex}}</td>
+                            <td>{{patient.age}}</td>
+                            <td>{{patient.roomName}}</td>
+                            <td>{{patient.visitType}}</td>
+                            <td>{{patient.medPodId}}</td>
+                            <td>{{patient.logDetailPk}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="widget-header widget-header-flat">
+            <h4>MedPod Arbitrary Packet Submission</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+
+                <form name="arbitraryPacket" class="form-horizontal panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <button type="submit" class="btn btn-primary pull-right" ng-click="submitArbitraryPacket()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <div class="widget-header widget-header-flat">
+            <h4>MedPod MedPod ID Submission</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+
+                <form name="medPodInsert" class="form-horizontal panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="practiceMedPodId" class="col-lg-3 col-md-3 col-sm-3 control-label">Practice</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="practiceMedPodId" name="practiceMedPodId" placeholder="Practice" required ng-model="medPodData.practice" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logDetailPKMedPodId" class="col-lg-3 col-md-3 col-sm-3 control-label">Log Detail PK</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="logDetailPKMedPodId" name="logDetailPKMedPodId" placeholder="Log Detail PK" required ng-model="medPodData.logDetailPk" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="medPodId" class="col-lg-3 col-md-3 col-sm-3 control-label">MedPod ID #</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="medPodId" name="medPodId" placeholder="MedPod ID #" ng-model="medPodData.medPodId" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <button type="submit" class="btn btn-primary pull-right" ng-disabled="medPodInsert.$invalid" ng-click="submitMedPodData()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <div class="widget-header widget-header-flat">
+            <h4>MedPod Vitals Data Submission</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+
+                <form name="vitalsInsert" class="form-horizontal panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="practiceVitals" class="col-lg-3 col-md-3 col-sm-3 control-label">Practice</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="practiceVitals" name="practiceVitals" placeholder="Practice" required ng-model="vitalsData.practice" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logDetailPKVitals" class="col-lg-3 col-md-3 col-sm-3 control-label">Log Detail PK</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="logDetailPKVitals" name="logDetailPKVitals" placeholder="Log Detail PK" required ng-model="vitalsData.logDetailPk" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceSerialNumber" class="col-lg-3 col-md-3 col-sm-3 control-label">Device Serial #</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="deviceSerialNumber" name="deviceSerialNumber" placeholder="Device Serial #" ng-model="vitalsData.serialNumber" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vitalsDataType" class="col-lg-3 col-md-3 col-sm-3 control-label">Vitals Data Type</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <select class="form-control" id="vitalsDataType" name="vitalsDataType" required ng-model="vitalsData.dataType" ng-options="item.name for item in vitalsDataTypes" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'height' || vitalsData.dataType.id == 'weight' || vitalsData.dataType.id == 'temperature'">
+                            <label for="units" class="col-lg-3 col-md-3 col-sm-3 control-label">Unit of Measure</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="units" name="units" placeholder="Unit of Measure" ng-model="vitalsData.units" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'height'">
+                            <label for="height" class="col-lg-3 col-md-3 col-sm-3 control-label">Height</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="height" name="height" placeholder="Height" ng-model="vitalsData.height" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'weight'">
+                            <label for="height" class="col-lg-3 col-md-3 col-sm-3 control-label">Weight</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight" ng-model="vitalsData.weight" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'temperature'">
+                            <label for="temperature" class="col-lg-3 col-md-3 col-sm-3 control-label">Temperature</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="temperature" name="temperature" placeholder="Temperature" ng-model="vitalsData.temperature" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'temperature'">
+                            <label for="location" class="col-lg-3 col-md-3 col-sm-3 control-label">Location</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <select class="form-control" id="tempLocation" name="tempLocation" ng-model="vitalsData.temperatureLocation" ng-options="item.name for item in temperatureLocations" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'bloodPressure'">
+                            <label for="bpSystolic" class="col-lg-3 col-md-3 col-sm-3 control-label">BP Systolic</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="bpSystolic" name="bpSystolic" placeholder="BP Systolic" ng-model="vitalsData.bpSystolic" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'bloodPressure'">
+                            <label for="bpDiastolic" class="col-lg-3 col-md-3 col-sm-3 control-label">BP Diastolic</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="bpDiastolic" name="bpDiastolic" placeholder="BP Diastolic" ng-model="vitalsData.bpDiastolic" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'bloodPressure' || vitalsData.dataType.id == 'spO2'">
+                            <label for="pulse" class="col-lg-3 col-md-3 col-sm-3 control-label">Pulse</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="pulse" name="pulse" placeholder="Pulse" ng-model="vitalsData.pulse" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'spO2'">
+                            <label for="o2Saturation" class="col-lg-3 col-md-3 col-sm-3 control-label">Saturation</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="o2Saturation" name="o2Saturation" placeholder="O2 Saturation" ng-model="vitalsData.o2Saturation" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'spO2'">
+                            <label for="o2Rate" class="col-lg-3 col-md-3 col-sm-3 control-label">Rate</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="o2Rate" name="o2Rate" placeholder="O2 Rate" ng-model="vitalsData.o2Rate" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'spO2'">
+                            <label for="o2Delivery" class="col-lg-3 col-md-3 col-sm-3 control-label">Delivery</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <select class="form-control" id="o2Delivery" name="o2Delivery" ng-model="vitalsData.o2Delivery" ng-options="item.name for item in o2Deliveries" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'spO2'">
+                            <label for="o2Route" class="col-lg-3 col-md-3 col-sm-3 control-label">Route</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <select class="form-control" id="o2Route" name="o2Route" ng-model="vitalsData.o2Route" ng-options="item.name for item in o2Routes" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'respiratoryRate'">
+                            <label for="respirations" class="col-lg-3 col-md-3 col-sm-3 control-label">Respirations</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="respirations" name="respirations" placeholder="Respirations" ng-model="vitalsData.respirations" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="vitalsData.dataType.id == 'painScale'">
+                            <label for="painScale" class="col-lg-3 col-md-3 col-sm-3 control-label">Pain Scale</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="painScale" name="painScale" placeholder="Pain Scale" ng-model="vitalsData.painScale" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <button type="submit" class="btn btn-primary pull-right" ng-disabled="vitalsInsert.$invalid" ng-click="submitVitalsData()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <div class="widget-header widget-header-flat">
+            <h4>MedPod Image Submission</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+
+                <form name="imageInsert" class="form-horizontal panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="practiceVitals" class="col-lg-3 col-md-3 col-sm-3 control-label">Practice</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="practiceVitals" name="practiceVitals" placeholder="Practice" required ng-model="imagesData.practice" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logDetailPKVitals" class="col-lg-3 col-md-3 col-sm-3 control-label">Log Detail PK</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="logDetailPKVitals" name="logDetailPKVitals" placeholder="Log Detail PK" required ng-model="imagesData.logDetailPk" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceSerialNumber" class="col-lg-3 col-md-3 col-sm-3 control-label">Device Serial #</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" id="deviceSerialNumber" name="deviceSerialNumber" placeholder="Device Serial #" ng-model="imagesData.serialNumber" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="units" class="col-lg-3 col-md-3 col-sm-3 control-label">Image Selection</label>
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="file" pv-file-select="imagesData.files" multiple />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <li ng-repeat="file in imagesData.files">{{file.name}}</li>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <button type="submit" class="btn btn-primary pull-right" ng-disabled="imageInsert.$invalid || imagesData.files.length == 0" ng-click="submitImageData()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
