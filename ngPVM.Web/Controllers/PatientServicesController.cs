@@ -7,12 +7,12 @@ using ngPVM.Web.Controllers.Base;
 
 namespace ngPVM.Web.Controllers
 {
-    public class PatientRegistrationController : PvmControllerBase
+    public class PatientServicesController : PvmControllerBase
     {
-      public PatientRegistrationController()
+        public PatientServicesController()
         {
-            PageNgApp = "pvPatientRegistration";
-            PageTitle = "Patient Registration";
+            PageNgApp = "pvPatientServices";
+            PageTitle = "Patient Services";
         }
         //
         // GET: /Login/

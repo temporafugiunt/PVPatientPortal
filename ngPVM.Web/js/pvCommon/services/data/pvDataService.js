@@ -20,26 +20,19 @@ commonApp.factory('pvDataService',
             getVersionInformation: function() {
               return (this.unauthenticatedApiGet("/DocStorage/VersionInformation"));
             },
-            getMedPodVersionInformation: function() {
-              return (this.authenticatedApiGet("/PvPartner/VersionInformation", "MedPodUser", "8675309"));
-            },
-            getMedPodCurrentPatientsForCurrentDate: function (practice, clinic) {
-              var currentDate = new Date();
-              return (this.authenticatedApiGet("/MedPod/CurrentPatients/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + clinic, "MedPodUser", "8675309"));
-            },
             getPatientPortalCurrentPatientsForCurrentDate: function (practice, clinic) {
               var currentDate = new Date();
               return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + clinic));
             },
-            getMedPodCurrentPatientsForServiceDate: function (practice, clinic, serviceDate) {
+            getPatientPortalCurrentPatientsForServiceDate: function (practice, clinic, serviceDate) {
               var serviceDateAsMoment = moment(serviceDate).toDate();
-              return (this.authenticatedApiGet("/MedPod/CurrentPatients/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + clinic, "MedPodUser", "8675309"));
+              return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + clinic));
             },
             postVitalsData: function (patientReadings) {
-              return (this.authenticatedApiSend("/MedPod/PatientReadings", "POST", JSON.stringify(patientReadings), "MedPodUser", "8675309"));
+              return (this.unauthenticatedApiSend("/PatientPortal/PatientReadings", "POST", JSON.stringify(patientReadings)));
             },
-            postMedPodId: function (practice, logDetailPk, medPodId) {
-              return (this.authenticatedApiSend("/MedPod/PatientPod/" + practice + "/" + logDetailPk + "/" + medPodId, "PUT", undefined, "MedPodUser", "8675309"));
+            postSessionId: function (practice, logDetailPk, sessionId) {
+              return (this.unauthenticatedApiSend("/PatientPortal/SessionId/" + practice + "/" + logDetailPk + "/" + sessionId, "PUT", undefined));
             },
             unauthenticatedApiGet: function (relativeUrl) {
               return (this.unauthenticatedApiSend(relativeUrl, "GET", undefined));

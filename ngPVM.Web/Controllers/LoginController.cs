@@ -12,7 +12,7 @@ namespace ngPVM.Web.Controllers
         public LoginController()
         {
             PageNgApp = "pvLogin";
-            PageTitle = "Login to PVM";
+            PageTitle = "Login to PV Patient Portal";
         }
         //
         // GET: /Login/

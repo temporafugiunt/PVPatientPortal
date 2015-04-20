@@ -121,7 +121,7 @@
     <Compile Include="Controllers\Base\PvmControllerBase.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\PatientRegistrationController.cs" />
+    <Compile Include="Controllers\PatientServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,8 +231,8 @@
     <Content Include="js\pvCommon\services\managers\pvUserManager.js" />
     <Content Include="js\pvLogin\app.js" />
     <Content Include="js\pvLogin\controller.js" />
-    <Content Include="js\pvPatientRegistration\app.js" />
-    <Content Include="js\pvPatientRegistration\controller.js" />
+    <Content Include="js\pvPatientServices\app.js" />
+    <Content Include="js\pvPatientServices\controller.js" />
     <Content Include="partials\pvCommon\directives\pvSidebarMenu.html" />
     <Content Include="partials\pvCommon\directives\pvTopNavbar.html" />
     <Content Include="partials\pvError\error404.html" />
@@ -240,8 +240,8 @@
     <Content Include="partials\pvLogin\changePassword.html" />
     <Content Include="partials\pvLogin\login.html" />
     <Content Include="partials\pvLogin\passwordHint.html" />
-    <Content Include="partials\pvPatientRegistration\patientSearch.html" />
-    <Content Include="partials\pvPatientRegistration\registerPatient.html" />
+    <Content Include="partials\pvPatientServices\myInfo.html" />
+    <Content Include="partials\pvPatientServices\patientSearch.html" />
     <Content Include="Scripts\ace\ace-elements.js" />
     <Content Include="Scripts\ace\ace-elements.min.js" />
     <Content Include="Scripts\ace\ace-extra.js" />
@@ -287,7 +287,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\PatientRegistration\Index.cshtml" />
+    <Content Include="Views\PatientServices\Index.cshtml" />
     <Content Include="Views\Shared\_FullPageLayout.cshtml" />
     <Content Include="Views\Login\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
