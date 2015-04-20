@@ -14,7 +14,7 @@ currentApp.controller('pvMyInfoController',
   }
 );
 
-currentApp.controller('pvPatientSearchController',
+currentApp.controller('pvApiTesterController',
   function pvPatientSearchController($scope, $log, $route, pvResources, pvDataService) {
     $log.info($route.current.controller + " executing.");
 

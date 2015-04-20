@@ -22,7 +22,8 @@ commonApp.run(function ($rootScope, $log, pvMenuAndRouteManager, pvResources, $l
 // Watch for changes to user and reset the active route accordingly.
 commonApp.run(function ($rootScope, $log, pvMenuAndRouteManager, pvResources, $window) {
     $rootScope.$on('pvActiveUserChanged', function (event, activeUser, previousUser) {
-        $log.info("Active user changed to " + activeUser + " from " + previousUser);
+      $log.info("Active user changed to " + activeUser + " from " + previousUser);
+        pvMenuAndRouteManager.cacheActiveUserSettings();
         if (activeUser != '') {
             pvMenuAndRouteManager.goToRoute(pvMenuAndRouteManager.getActiveUserDefaultRoute(), true);
         } else {

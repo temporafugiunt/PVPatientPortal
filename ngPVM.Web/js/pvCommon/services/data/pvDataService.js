@@ -24,6 +24,9 @@ commonApp.factory('pvDataService',
               var currentDate = new Date();
               return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + clinic));
             },
+            loginPatientPortal: function (userInfo) {
+              return (this.unauthenticatedApiSend("/PatientPortal/Login", "POST", JSON.stringify(userInfo)));
+            },
             getPatientPortalCurrentPatientsForServiceDate: function (practice, clinic, serviceDate) {
               var serviceDateAsMoment = moment(serviceDate).toDate();
               return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + clinic));

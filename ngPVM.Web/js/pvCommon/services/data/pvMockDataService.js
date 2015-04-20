@@ -6,7 +6,7 @@ commonApp.factory('pvMockDataService',
             getMockMenu: function() {
                 return [
                     {
-                        menuName: 'Patient',
+                        menuName: 'Patient Services',
                         menuIconClass: 'icon-user-md',
                         isActive: false,
                         isOpen: false,
@@ -17,12 +17,12 @@ commonApp.factory('pvMockDataService',
                         showSubMenu: true,
                         subMenuItems: [
                             {
-                                menuName: 'Search',
+                                menuName: 'API Tester',
                                 isActive: false,
                                 menuId: 3,
                                 ngApp: 'pvPatientServices',
                                 serverRoute: 'PatientServices',
-                                ngRoute: 'patientSearch',
+                                ngRoute: 'apiTester',
                                 showSubMenu: false,
                                 subMenuItems: []
                             },
