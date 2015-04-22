@@ -20,16 +20,24 @@ commonApp.factory('pvDataService',
             getVersionInformation: function() {
               return (this.unauthenticatedApiGet("/DocStorage/VersionInformation"));
             },
-            getPatientPortalCurrentPatientsForCurrentDate: function (practice, clinic) {
+            getProviderPortalCurrentPatientsForCurrentDate: function (practice, clinic) {
               var currentDate = new Date();
-              return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + clinic));
+              return (this.unauthenticatedApiGet("/ProviderPortal/CurrentPatients/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + clinic));
+            },
+            getProviderPortalCurrentPatientsForServiceDate: function (practice, clinic, serviceDate) {
+              var serviceDateAsMoment = moment(serviceDate).toDate();
+              return (this.unauthenticatedApiGet("/ProviderPortal/CurrentPatients/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + clinic));
+            },
+            getPatientPortalAppointmentsForCurrentDate: function (practice, patientPk) {
+              var currentDate = new Date();
+              return (this.unauthenticatedApiGet("/PatientPortal/CurrentAppointments/" + currentDate.getTime() + "/" + currentDate.getTimezoneOffset() + "/" + practice + "/" + patientPk));
+            },
+            getPatientPortalAppointmentsForServiceDate: function (practice, patientPk, serviceDate) {
+              var serviceDateAsMoment = moment(serviceDate).toDate();
+              return (this.unauthenticatedApiGet("/PatientPortal/CurrentAppointments/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + patientPk));
             },
             loginPatientPortal: function (userInfo) {
               return (this.unauthenticatedApiSend("/PatientPortal/Login", "POST", JSON.stringify(userInfo)));
-            },
-            getPatientPortalCurrentPatientsForServiceDate: function (practice, clinic, serviceDate) {
-              var serviceDateAsMoment = moment(serviceDate).toDate();
-              return (this.unauthenticatedApiGet("/PatientPortal/CurrentPatients/" + serviceDateAsMoment.getTime() + "/" + serviceDateAsMoment.getTimezoneOffset() + "/" + practice + "/" + clinic));
             },
             postVitalsData: function (patientReadings) {
               return (this.unauthenticatedApiSend("/PatientPortal/PatientReadings", "POST", JSON.stringify(patientReadings)));

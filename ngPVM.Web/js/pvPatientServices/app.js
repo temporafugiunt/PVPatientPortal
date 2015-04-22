@@ -13,5 +13,10 @@ var currentApp = angular.module('pvPatientServices', [ 'pvCommon' ])
             controller: 'pvMyInfoController'
         });
 
-        $routeProvider.otherwise({ redirectTo: '/apiTester' });
+        $routeProvider.when('/providerInfo', {
+          templateUrl: pvResourcesProvider.addWebsiteBasePath('partials/pvPatientServices/providerInfo.html'),
+          controller: 'pvProviderInfoController'
+        });
+
+        $routeProvider.otherwise({ redirectTo: '/myInfo' });
     });
