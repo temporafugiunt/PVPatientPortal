@@ -24,9 +24,29 @@
                     'FileReader': true
                 }
             }
+        },
+
+        jasmine: {
+            pivitol: {
+                src: [
+                    '../ngpvm.web/js/pvCommon/app.js',
+                    'jasmine/pvMockResources.js',
+                    '../ngpvm.web/js/**/*.js'
+                ],
+                options: {
+                    specs: 'jasmine/*.js',
+                    vendor: [
+                        '../ngpvm.web/scripts/jquery-2.0.3.js',
+                        '../ngpvm.web/scripts/angular/angular.js',
+                        '../ngpvm.web/scripts/angular/angular-cookies.js',
+                        'https://code.angularjs.org/1.1.5/angular-mocks.js'
+                    ],
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.registerTask('default', ['jshint']);
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.registerTask('default', ['jshint', 'jasmine']);
 };
