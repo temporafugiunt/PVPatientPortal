@@ -10,7 +10,7 @@ commonApp.run(function ($rootScope, $log, pvMenuAndRouteManager, pvResources, $l
         var pageAsRoute = pvMenuAndRouteManager.getRouteFromCurrentPageData();
         var storedActiveRoute = pvMenuAndRouteManager.getActiveRoute();
         if ((typeof storedActiveRoute == 'undefined') || (!pvMenuAndRouteManager.isSameRoute(pageAsRoute, storedActiveRoute))) {
-            this.saveActiveRouteUpdateMenu(pageAsRoute, false, activeUserMenuItems);
+          pvMenuAndRouteManager.saveActiveRouteUpdateMenu(pageAsRoute, false, activeUserMenuItems);
         }
         // Since we changes the route, setup the active menu viewmodel properties correctly.
         else if(typeof activeUserMenuItems != 'undefined') {

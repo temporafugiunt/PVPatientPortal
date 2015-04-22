@@ -242,6 +242,7 @@
     <Content Include="partials\pvLogin\changePassword.html" />
     <Content Include="partials\pvLogin\login.html" />
     <Content Include="partials\pvLogin\passwordHint.html" />
+    <Content Include="partials\pvPatientServices\providerInfo.html" />
     <Content Include="partials\pvPatientServices\myInfo.html" />
     <Content Include="partials\pvPatientServices\apiTester.html" />
     <Content Include="Scripts\ace\ace-elements.js" />

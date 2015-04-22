@@ -37,12 +37,12 @@ commonApp.factory('pvMockDataService',
                                 subMenuItems: []
                             },
                             {
-                                menuName: 'Payer / Insurance',
+                                menuName: 'Provider',
                                 isActive: false,
                                 menuId: 5,
-                                ngApp: 'pvError',
-                                serverRoute: 'Error',
-                                ngRoute: 'error500',
+                                ngApp: 'pvPatientServices',
+                                serverRoute: 'PatientServices',
+                                ngRoute: 'providerInfo',
                                 showSubMenu: false,
                                 subMenuItems: []
                             }
@@ -85,10 +85,10 @@ commonApp.factory('pvMockDataService',
             },
             getMockDefaultRoute: function() {
                 return {
-                    menuId: 3,
+                    menuId: 4,
                     ngApp: 'pvPatientServices',
                     serverRoute: 'PatientServices',
-                    ngRoute: 'patientSearch'
+                    ngRoute: 'myInfo'
                 };
             },
         };

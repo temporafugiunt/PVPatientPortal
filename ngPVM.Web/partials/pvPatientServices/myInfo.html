@@ -1,17 +1,34 @@
 ﻿<div class="row">
     <div class="widget-box col-xs-12">
         <div class="widget-header widget-header-flat">
-            <h4>Basic CORS Test Patient Portal API</h4>
+            <h4>Virtual Appointments</h4>
         </div>
         <div class="widget-body">
             <div class="widget-main">
-                <p>Calling RESTful API: <b>{{apiHost}}</b></p>
-            </div>
-        </div>
-        <div class="widget-body">
-            <div class="widget-main">
-                <p>This call demonstrates MedPod API <b>CORS enalbed</b> calling <b>with header authentication</b>.</p>
-                <p>{{versionInformation}}</p>
+                <p>You have the following Virtual Appointments today.</p>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th colspan="11">List was last updated on {{patientAppointmentList.lastOperationTime}}</th>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <th>Practice</th>
+                            <th>Clinic</th>
+                            <th>Appointment Time</th>
+                            <th>Provider Name</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr ng-repeat="appointment in patientAppointmentList.data.appointments">
+                            <td>{{appointment.practiceDescription}}</td>
+                            <td>{{appointment.clinicDescription}}</td>
+                            <td>{{asProperDateTime(appointment.appointmentTimeIn)}}</td>
+                            <td>{{appointment.providerName}}</td>
+                            <td><button type="submit" class="btn btn-primary pull-right" ng-click="connectToAppointment(appointment)">Connect</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
