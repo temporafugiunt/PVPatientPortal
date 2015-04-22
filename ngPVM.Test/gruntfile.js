@@ -30,13 +30,16 @@
             pivitol: {
                 src: [
                     '../ngpvm.web/js/pvCommon/app.js',
+                    'jasmine/pvMockResources.js',
                     '../ngpvm.web/js/**/*.js'
                 ],
                 options: {
                     specs: 'jasmine/*.js',
                     vendor: [
                         '../ngpvm.web/scripts/jquery-2.0.3.js',
-                        '../ngpvm.web/scripts/angular/angular.js'
+                        '../ngpvm.web/scripts/angular/angular.js',
+                        '../ngpvm.web/scripts/angular/angular-cookies.js',
+                        'https://code.angularjs.org/1.1.5/angular-mocks.js'
                     ],
                 }
             }
