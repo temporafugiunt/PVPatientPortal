@@ -186,29 +186,29 @@ currentApp.controller('pvApiTesterController',
       var file = $scope.imagesData.files[0];
 
       // Stupid asynchronous callback function that won't allow us to loop through a list of files to complete the operation...
-      reader.onloadend = function () {
-        var mediaTypeAndEncodingIdx = reader.result.search(',');
-        var mediaTypeAndEncoding = reader.result.substr(0, mediaTypeAndEncodingIdx);
-        var encodingIdx = mediaTypeAndEncoding.search(';');
-        // ignore the "data:" portion of the URL.
-        var mediaType = mediaTypeAndEncoding.substring(5, encodingIdx);
-        var encoding = mediaTypeAndEncoding.substr(encodingIdx + 1);
-        var name = file.name;
-        if (name.lastIndexOf('.') != -1) {
-          name = name.substr(0, name.lastIndexOf('.'));
-        }
+        reader.onloadend = function() {
+            var mediaTypeAndEncodingIdx = reader.result.search(',');
+            var mediaTypeAndEncoding = reader.result.substr(0, mediaTypeAndEncodingIdx);
+            var encodingIdx = mediaTypeAndEncoding.search(';');
+            // ignore the "data:" portion of the URL.
+            var mediaType = mediaTypeAndEncoding.substring(5, encodingIdx);
+            var encoding = mediaTypeAndEncoding.substr(encodingIdx + 1);
+            var name = file.name;
+            if (name.lastIndexOf('.') != -1) {
+                name = name.substr(0, name.lastIndexOf('.'));
+            }
 
-        var fileInfo = {
-          name: name,
-          mediaType: mediaType,
-          encoding: encoding,
-          data: reader.result.substr(mediaTypeAndEncodingIdx + 1),
-          serialNumber: "123456789ABCD12345",
-          timeStamp: currentDate.getTime(),
+            var fileInfo = {
+                name: name,
+                mediaType: mediaType,
+                encoding: encoding,
+                data: reader.result.substr(mediaTypeAndEncodingIdx + 1),
+                serialNumber: "123456789ABCD12345",
+                timeStamp: currentDate.getTime(),
+            };
+            patientReadings.images.push(fileInfo);
+            pvDataService.postVitalsData(patientReadings);
         };
-        patientReadings.images.push(fileInfo);
-        pvDataService.postVitalsData(patientReadings);
-      }
       reader.readAsDataURL(file);
     };
 

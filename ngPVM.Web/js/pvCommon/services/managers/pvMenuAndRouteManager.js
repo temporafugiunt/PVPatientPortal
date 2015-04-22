@@ -184,7 +184,7 @@ commonApp.factory('pvMenuAndRouteManager',
                         // Not an angular route, are we server redirect.
                     } else if (routeInfo) {
                         this.saveActiveRouteUpdateMenu(routeInfo, replaceInHistory, fullMenu);
-                        fullURL = pvResources.addWebsiteBasePath(serverRoute);
+                        fullURL = pvResources.addWebsiteBasePath(serverRoute); // TODO: 'serverRoute' is not defined
                         if (replaceInHistory) {
                             $window.location.replace(fullURL);
                         } else {
@@ -229,17 +229,17 @@ commonApp.factory('pvMenuAndRouteManager',
                 return $cookieStore.get('pvActiveRoute');
             },
             isARoute: function(routeInfo) {
-                if ((typeof routeInfo != 'undefined')
-                    && (typeof routeInfo.ngApp != 'undefined')
-                    && (typeof routeInfo.serverRoute != 'undefined')
-                    && (typeof routeInfo.ngRoute != 'undefined')) {
+                if ((typeof routeInfo != 'undefined') &&
+                    (typeof routeInfo.ngApp != 'undefined') &&
+                    (typeof routeInfo.serverRoute != 'undefined') &&
+                    (typeof routeInfo.ngRoute != 'undefined')) {
                     return true;
                 }
                 return false;
             },
             isAMenuItem: function(menuInfo) {
-                if ((typeof menuInfo != 'undefined')
-                    && (typeof menuInfo.menuId != 'undefined')) {
+                if ((typeof menuInfo != 'undefined') &&
+                    (typeof menuInfo.menuId != 'undefined')) {
                     return true;
                 }
                 return false;

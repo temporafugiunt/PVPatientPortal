@@ -8,14 +8,14 @@ commonApp.factory('pvUserManager',
                 var loginFailureReason = '';
                 var loginSuccess = false;
 
-              var userInfo = {
-                userName: userName,
-                password: password,
-                practice: "TEST"
-              }
-              var loginResponse = pvDataService.loginPatientPortal(userInfo);
+                var userInfo = {
+                    userName: userName,
+                    password: password,
+                    practice: "TEST"
+                };
+                var loginResponse = pvDataService.loginPatientPortal(userInfo);
 
-              if (loginResponse == undefined) {
+                if (loginResponse == undefined) {
                     loginFailureReason = 'Invalid User Name or Password';
                 } else {
                     loginSuccess = true;
