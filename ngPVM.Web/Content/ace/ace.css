@@ -2746,7 +2746,7 @@ li [class*=" icon-"],
 }
 */
 /** buttons */
-.btn {
+.btn, .btn:hover {
   display: inline-block;
   color: #FFF !important;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
@@ -2761,21 +2761,21 @@ li [class*=" icon-"],
   margin: 0;
   position: relative;
 }
-.btn-lg {
+.btn-lg, .btn-lg:hover {
   border-width: 5px;
   line-height: 1.35;
   padding: 7px 16px;
 }
-.btn-sm {
+.btn-sm, .btn-sm:hover {
   border-width: 4px;
   font-size: 13px;
   padding: 4px 9px;
   line-height: 1.39;
 }
-.btn-xs {
+.btn-xs, .btn-xs:hover {
   border-width: 3px;
 }
-.btn-minier {
+.btn-minier, .btn-minier:hover {
   padding: 0 4px;
   line-height: 18px;
   border-width: 2px;
