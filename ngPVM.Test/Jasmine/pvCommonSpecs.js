@@ -15,6 +15,23 @@
                         expect(actual).toBe(expected);
                     });
                 });
+                describe('standardizeRouteParam', function() {
+                    it('should remove slashes from a string', function() {
+                        var test = '/testroute/';
+                        var actual = pvUtilityService.standardizeRouteParam(test);
+                        var expected = 'testroute';
+                        expect(actual).toBe(expected);
+                    });
+                    it('should return an empty string for undefined param', function() {
+                        expect(pvUtilityService.standardizeRouteParam(undefined)).toBe('');
+                    });
+                    it('should return an empty string for slash', function () {
+                        expect(pvUtilityService.standardizeRouteParam('/')).toBe('');
+                    });
+                    it('should return an empty string for an empty string param', function () {
+                        expect(pvUtilityService.standardizeRouteParam('')).toBe('');
+                    });
+                });
             });
         });
 
