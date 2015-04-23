@@ -1,10 +1,21 @@
 ﻿<div class="row">
-    <div class="widget-box col-xs-12">
+    <div class="alert alert-danger" ng-show="connectionError != ''">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="icon-remove"></i>
+        </button>
+        <strong>
+            <i class="icon-remove" ng-click="clearError()"></i>
+            Connection Error
+        </strong>
+        {{connectionError}}
+        <br>
+    </div><div class="widget-box col-xs-12" ng-show="inAppointment != true">
         <div class="widget-header widget-header-flat">
             <h4>Virtual Appointments</h4>
+            <button type="submit" class="btn btn-sm btn-purple pull-right" ng-click="getAvailableVirtualEncounters()"><i class="icon-refresh align-top"></i>Refresh Appointments</button>
         </div>
         <div class="widget-body">
-            <div class="widget-main">
+            <div class="widget-main" ng-show="providerAppointmentList.availableVirtualEncounterPatients.practices[0].clinics.length > 0">
                 <p>The following Virtual Appointments are available today.</p>
                 <table class="table table-bordered">
                     <tbody>
@@ -40,10 +51,31 @@
                             <td>{{patient.visitType}}</td>
                             <td>{{patient.providerName}}</td>
                             <td>{{patient.providerNum}}</td>
-                            <td><button type="submit" class="btn btn-primary pull-right" ng-click="connectToAppointment(patient)">Connect</button></td>
+                            <td><button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="connectToAppointment(patient)"><i class="icon-signin bigger-125 align-top"></i>Connect</button></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="widget-main" ng-show="providerAppointmentList.availableVirtualEncounterPatients.practices[0].clinics.length == 0">
+                <p>No Virtual Appointments are currently scheduled for today.</p>
+            </div>
+        </div>
+    </div>
+    <div class="widget-box col-xs-12" ng-show="inAppointment == true">
+        <div class="widget-header widget-header-flat">
+            <h4>Virtual Appointment with Patient {{patientLastName}}, {{patientFirstName}}</h4>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="terminateAppointment()"><i class="icon-signout bigger-125 align-top"></i>Disconnect</button>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
+                <div class="alert alert-info" ng-show="waitingForPatient == true">
+                    <strong>Please Wait</strong>
+                    The Patient has not yet connected or has diconnected.<br />
+                    Appointment Time: {{appointmentTime}}
+                    <br>
+                </div>
+                <video id="my-video" muted="true" autoplay></video>
             </div>
         </div>
     </div>
