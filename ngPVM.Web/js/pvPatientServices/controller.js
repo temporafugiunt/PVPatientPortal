@@ -7,14 +7,16 @@ currentApp.controller('pvMyInfoController',
     $scope.inAppointment = false;
     $scope.waitingForProvider = false;
     $scope.lastConnectionId = '';
+    $scope.takingPhoto = false;
+    $scope.appointmentContext = {};
 
     $log.info($route.current.controller + " executing.");
 
     $scope.patientAppointmentList = {};
 
-    $scope.patientAppointmentList.practice = "TEST";
+    $scope.practice = "TEST";
 
-    $scope.patientAppointmentList.data = pvDataService.getPatientPortalAppointmentsForCurrentDate($scope.patientAppointmentList.practice, pvUserManager.getActiveUserPk());
+    $scope.patientAppointmentList.data = pvDataService.getPatientPortalAppointmentsForCurrentDate($scope.practice, pvUserManager.getActiveUserPk());
     $scope.patientAppointmentList.lastOperationTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
 
     $scope.asProperDateTime = function (dateTime) {
@@ -26,7 +28,7 @@ currentApp.controller('pvMyInfoController',
     };
 
     $scope.getPatientAppointments = function () {
-      $scope.patientAppointmentList.data = pvDataService.getPatientPortalAppointmentsForCurrentDate($scope.patientAppointmentList.practice, pvUserManager.getActiveUserPk());
+      $scope.patientAppointmentList.data = pvDataService.getPatientPortalAppointmentsForCurrentDate($scope.practice, pvUserManager.getActiveUserPk());
       $scope.patientAppointmentList.lastOperationTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
     };
 
@@ -38,11 +40,13 @@ currentApp.controller('pvMyInfoController',
       if (angular.isDefined($scope.localStream)) {
         $scope.localStream.stop();
         delete $scope.localStream;
+        $scope.videoInitialized = false;
       }
     };
 
     $scope.connectToAppointment = function (appointment) {
       $scope.destroyConnection();
+      $scope.appointmentContext = appointment;
       $scope.connectionError = '';
       $scope.inAppointment = true;
       $scope.waitingForProvider = true;
@@ -57,6 +61,7 @@ currentApp.controller('pvMyInfoController',
         }, function (stream) {
           // Set your video displays
           $('#my-video').prop('src', URL.createObjectURL(stream));
+          $scope.videoInitialized = true;
           $scope.localStream = stream;
           $scope.$apply();
           $log.info('Created local media stream.');
@@ -117,6 +122,65 @@ currentApp.controller('pvMyInfoController',
       $scope.inAppointment = false;
     }
 
+    $scope.takePhoto = function () {
+      $scope.takingPhoto = true;
+      var video = $('#my-video')[0];
+      var canvas = $('#my-photo-canvas')[0];
+      var photo = $('#my-photo')[0];
+
+      var width = video.videoWidth;
+      var height = video.videoHeight;
+
+      // Firefox currently has a bug where the height can't be read from the video, so we will make assumptions if this happens.
+      if (isNaN(height)) {
+        height = width / (4 / 3);
+      }
+
+      // Take a frame from the current local stream.
+      var context = canvas.getContext('2d');
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      var data = canvas.toDataURL('image/png');
+      $scope.imgData = data;
+      photo.setAttribute('src', data);
+      
+    };
+
+    $scope.sendPhoto = function () {
+      var currentMoment = moment();
+      var currentDate = new Date();
+      var mediaTypeAndEncodingIdx = $scope.imgData.search(',');
+      var mediaTypeAndEncoding = $scope.imgData.substr(0, mediaTypeAndEncodingIdx);
+      var encodingIdx = mediaTypeAndEncoding.search(';');
+      // ignore the "data:" portion of the URL.
+      var mediaType = mediaTypeAndEncoding.substring(5, encodingIdx);
+      var encoding = mediaTypeAndEncoding.substr(encodingIdx + 1);
+      var name = "Patient Capture " + currentMoment.format("h:mm:ss a");
+      
+      var patientReadings = {
+        practice: $scope.practice,
+        logDetailPk: $scope.appointmentContext.logDetailPk,
+        timeZoneOffset: currentDate.getTimezoneOffset(),
+        images: []
+      };
+
+      var fileInfo = {
+        name: name,
+        mediaType: mediaType,
+        encoding: encoding,
+        data: $scope.imgData.substr(mediaTypeAndEncodingIdx + 1),
+        timeStamp: currentDate.getTime(),
+        serialNumber: ''
+      };
+
+      patientReadings.images.push(fileInfo);
+      pvDataService.postVitalsData(patientReadings);
+
+      $scope.takingPhoto = false;
+    };
+
     $scope.retryInitiateVideo = function () {
       // TODO - angular error message shower thingy
     }
@@ -144,7 +208,7 @@ currentApp.controller('pvProviderInfoController',
     $scope.inAppointment = false;
     $scope.waitingForPatient = false;
     $scope.lastConnectionId = '';
-
+    
     $scope.providerAppointmentList = {};
 
     $scope.providerAppointmentList.practice = "TEST";
@@ -183,7 +247,8 @@ currentApp.controller('pvProviderInfoController',
       $scope.connectionError = '';
       $scope.inAppointment = true;
       $scope.waitingForPatient = true;
-      $scope.appointmentProvider = appointment.providerName;
+      $scope.patientLastName = appointment.lastName;
+      $scope.patientFirstName = appointment.firstName;
       $scope.appointmentTime = $scope.asProperDateTime(appointment.appointmentTimeIn);
       
       // Get audio/video stream
@@ -217,20 +282,20 @@ currentApp.controller('pvProviderInfoController',
         $log.info('Could not connect to media stream.');
         $scope.$apply();
       });
+  };
+
+    $scope.clearError = function() {
+      $scope.connectionError = '';
     };
 
-    $scope.clearError = function () {
-      $scope.connectionError = '';
-    }
-
-    $scope.terminateAppointment = function () {
+    $scope.terminateAppointment = function() {
       $scope.destroyConnection();
       $scope.inAppointment = false;
-    }
+    };
 
-    $scope.retryInitiateVideo = function () {
+    $scope.retryInitiateVideo = function() {
       // TODO - angular error message shower thingy
-    }
+    };
   }
 );
 

@@ -40,11 +40,11 @@ commonApp.factory('pvDataService',
               return (this.unauthenticatedApiSend("/PatientPortal/Login", "POST", JSON.stringify(userInfo)));
             },
             postVitalsData: function (patientReadings) {
-              return (this.unauthenticatedApiSend("/PatientPortal/PatientReadings", "POST", JSON.stringify(patientReadings)));
+              return (this.authenticatedApiSend("/MedPod/PatientReadings", "POST", JSON.stringify(patientReadings), "MedPodUser", "8675309"));
             },
-            postSessionId: function (practice, logDetailPk, sessionId) {
-              return (this.unauthenticatedApiSend("/PatientPortal/SessionId/" + practice + "/" + logDetailPk + "/" + sessionId, "PUT", undefined));
-            },
+            //postSessionId: function (practice, logDetailPk, sessionId) {
+            //  return (this.unauthenticatedApiSend("/PatientPortal/SessionId/" + practice + "/" + logDetailPk + "/" + sessionId, "PUT", undefined));
+            //},
             unauthenticatedApiGet: function (relativeUrl) {
               return (this.unauthenticatedApiSend(relativeUrl, "GET", undefined));
             },
