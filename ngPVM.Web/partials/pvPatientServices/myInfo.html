@@ -1,0 +1,81 @@
+﻿<div class="row">
+    <div class="alert alert-danger" ng-show="connectionError != ''">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="icon-remove"></i>
+        </button>
+        <strong>
+            <i class="icon-remove" ng-click="clearError()"></i>
+            Connection Error
+        </strong>
+        {{connectionError}}
+        <br>
+    </div>
+    <div class="widget-box col-xs-12" ng-show="inAppointment != true">
+        <div class="widget-header widget-header-flat">
+            <h4>Virtual Appointments</h4>
+            <button type="submit" class="btn btn-sm btn-purple pull-right" ng-click="getPatientAppointments()"><i class="icon-refresh align-top"></i>Refresh Appointments</button>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main" ng-show="patientAppointmentList.data.appointments.length > 0">
+                <p>You have the following Virtual Appointments today.</p>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th colspan="11">List was last updated on {{patientAppointmentList.lastOperationTime}}</th>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <th>Practice</th>
+                            <th>Clinic</th>
+                            <th>Appointment Time</th>
+                            <th>Provider Name</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr ng-repeat="appointment in patientAppointmentList.data.appointments">
+                            <td>{{appointment.practiceDescription}}</td>
+                            <td>{{appointment.clinicDescription}}</td>
+                            <td>{{asProperDateTime(appointment.appointmentTimeIn)}}</td>
+                            <td>{{appointment.providerName}}</td>
+                            <td><button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="connectToAppointment(appointment)"><i class="icon-signin bigger-125 align-top"></i>Connect</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget-main" ng-show="patientAppointmentList.data.appointments.length == 0">
+                <p>You have no Virtual Appointments currently scheduled today.</p>
+            </div>
+        </div>
+    </div>
+    <div class="widget-box col-xs-12" ng-show="inAppointment == true">
+        <div class="widget-header widget-header-flat">
+            <h4>Virtual Appointment with Provider {{appointmentProvider}}</h4>
+            <button type="submit" class="btn btn-danger btn-sm pull-right" ng-click="terminateAppointment()"><i class="icon-signout bigger-125 align-top"></i>Disconnect</button>
+            <!--<button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="takePhoto()"><i class="icon-camera bigger-125 align-top"></i>Take Photo</button>-->
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12" ng-show="takingPhoto == false">
+                        <div class="alert alert-info" ng-show="waitingForProvider == true">
+                            <strong>Please Wait</strong>
+                            The Provider has not yet connected or has diconnected.<br />
+                            Appointment Time: {{appointmentTime}}
+                            <br>
+                        </div>
+                        <video id="provider-video" autoplay></video>
+                    </div>
+                    <div ng-show="videoInitialized == true" class=" col-lg-6 col-sm-12">
+                        <video id="my-video" muted="true" autoplay></video>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="takePhoto()"><i class="icon-camera bigger-125 align-top"></i>Take Photo</button>
+                    </div>
+                    <div ng-show="videoInitialized == true && takingPhoto == true" class="col-lg-6 col-sm-12">
+                        <canvas id="my-photo-canvas" ng-show="debug == true"></canvas>
+                        <img id="my-photo" alt="Screen captures appear in this box.">
+                        <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="sendPhoto()"><i class="icon-camera bigger-125 align-top"></i>Send Photo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
