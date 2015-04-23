@@ -113,82 +113,37 @@ currentApp.controller('pvMyInfoController',
     }
 
     $scope.terminateAppointment = function() {
-      // TODO - Update to new method once replaced.
-      //window.existingCall.close();
-      //  step2();
       $scope.destroyConnection();
       $scope.inAppointment = false;
     }
 
     $scope.retryInitiateVideo = function () {
       // TODO - angular error message shower thingy
-      //$('#step1-error').hide();
-      //step1();
     }
-    
-    //peer.on('open', function () {
-    //  //$('#my-id').text(peer.id);
-    //});
-
-    //// Receiving a call
-    //peer.on('call', function(call) {
-    //  // Answer the call automatically (instead of prompting user) for demo purposes
-    //  //call.answer(window.localStream);
-    //  //step3(call);
-    //  });
-    //peer.on('error', function(err) {
-    //  alert(err.message);
-    //    // Return to step 2 if error occurs
-    //    //step2();
-    //});
-
-//    // Get things started
-//    step1();
-    
-
-//    function step1 () {
-//      // Get audio/video stream
-//      navigator.getUserMedia({
-//        audio: true, video: true
-//      }, function (stream) {
-//        // Set your video displays
-//        $('#my-video').prop('src', URL.createObjectURL(stream));
-
-//        window.localStream = stream;
-//        step2();
-//        }, function() {
-//$('#step1-error').show(); });
-//        }
-
-//      function step2 () {
-//        $('#step1, #step3').hide();
-//        $('#step2').show();
-//        }
-
-//      function step3 (call) {
-//        // Hang up on an existing call if present
-//        if (window.existingCall) {
-//          window.existingCall.close();
-//      }
-
-//      // Wait for stream on the call, then set peer video display
-//      call.on('stream', function(stream) {
-//        $('#their-video').prop('src', URL.createObjectURL(stream));
-//        });
-
-//        // UI stuff
-//      window.existingCall = call;
-//      $('#their-id').text(call.peer);
-//      call.on('close', step2);
-//      $('#step1, #step2').hide();
-//      $('#step3').show();
-//      }
   }
 );
 
 currentApp.controller('pvProviderInfoController',
   function pvMyInfoController($scope, $log, $route, pvResources, pvDataService, pvUserManager) {
     $log.info($route.current.controller + " executing.");
+
+    $scope.peer = new Peer({key: 'sao90qrgmbhs38fr', debug : 3 });
+
+    $scope.peer.on('open', function () {
+      $scope.lastConnectionId = $scope.peer.id;
+      $log.info("Opened connection with ID " +$scope.peer.id);
+      $scope.$apply();
+    });
+
+    $scope.peer.on('error', function (err) {
+      $scope.connectionError = err.message;
+      $scope.$apply();
+    });
+
+    $scope.connectionError = '';
+    $scope.inAppointment = false;
+    $scope.waitingForPatient = false;
+    $scope.lastConnectionId = '';
 
     $scope.providerAppointmentList = {};
 
@@ -205,14 +160,77 @@ currentApp.controller('pvProviderInfoController',
       return '';
     };
 
-    $scope.getProviderCurrentPatients = function () {
+    $scope.getAvailableVirtualEncounters = function () {
       $scope.providerAppointmentList.availableVirtualEncounterPatients = pvDataService.getProviderPortalCurrentPatientsForCurrentDate($scope.providerAppointmentList.practice, '');
       $scope.providerAppointmentList.lastOperationTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a Z");
     };
 
-    $scope.connectToAppointment = function (appointment) {
-      alert('Appointment ' + appointment.logDetailPk);
+    $scope.destroyConnection = function () {
+      // Hang up on an existing call if present
+      if (angular.isDefined($scope.existingCall)) {
+        $scope.existingCall.close();
+        delete $scope.existingCall;
+      }
+
+      if (angular.isDefined($scope.localStream)) {
+        $scope.localStream.stop();
+        delete $scope.localStream;
+      }
     };
+
+    $scope.connectToAppointment = function (appointment) {
+      $scope.destroyConnection();
+      $scope.connectionError = '';
+      $scope.inAppointment = true;
+      $scope.waitingForPatient = true;
+      $scope.appointmentProvider = appointment.providerName;
+      $scope.appointmentTime = $scope.asProperDateTime(appointment.appointmentTimeIn);
+      
+      // Get audio/video stream
+      navigator.getUserMedia({
+        audio: true, video: true
+      }, function (stream) {
+        // Set your video displays
+        $('#my-video').prop('src', URL.createObjectURL(stream));
+        $scope.localStream = stream;
+        $scope.$apply();
+        $log.info('Created local media stream.');
+
+        $scope.existingCall = $scope.peer.call(appointment.logDetailPk, $scope.localStream);
+
+        // Wait for stream on the call, then set peer video display
+        $scope.existingCall.on('stream', function (stream) {
+          $('#patient-video').prop('src', URL.createObjectURL(stream));
+          $scope.waitingForPatient = false;
+          $scope.$apply();
+        });
+
+        $scope.existingCall.on('close', function () {
+          $scope.waitingForPatient = true;
+          $scope.$apply();
+        });
+
+      }, function () {
+        $scope.inAppointment = false;
+        $scope.waitingForPatient = false;
+        $scope.connectionError = "Unable to connect to your device's audio and / or video, please try again after you have fixed the problem.";
+        $log.info('Could not connect to media stream.');
+        $scope.$apply();
+      });
+    };
+
+    $scope.clearError = function () {
+      $scope.connectionError = '';
+    }
+
+    $scope.terminateAppointment = function () {
+      $scope.destroyConnection();
+      $scope.inAppointment = false;
+    }
+
+    $scope.retryInitiateVideo = function () {
+      // TODO - angular error message shower thingy
+    }
   }
 );
 
