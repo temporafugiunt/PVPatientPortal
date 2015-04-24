@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="gruntfile.js" />
+    <Content Include="Jasmine\mockPVResources.js" />
+    <Content Include="Jasmine\pvCommonSpecs.js" />
     <Content Include="Jasmine\sanity.js" />
   </ItemGroup>
   <Choose>

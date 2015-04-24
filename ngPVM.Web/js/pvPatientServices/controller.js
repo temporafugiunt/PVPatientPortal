@@ -113,14 +113,14 @@ currentApp.controller('pvMyInfoController',
       });
     };
 
-    $scope.clearError = function() {
-      $scope.connectionError = '';
-    }
+      $scope.clearError = function() {
+          $scope.connectionError = '';
+      };
 
-    $scope.terminateAppointment = function() {
-      $scope.destroyConnection();
-      $scope.inAppointment = false;
-    }
+      $scope.terminateAppointment = function() {
+          $scope.destroyConnection();
+          $scope.inAppointment = false;
+      };
 
     $scope.takePhoto = function () {
       $scope.takingPhoto = true;
@@ -181,9 +181,9 @@ currentApp.controller('pvMyInfoController',
       $scope.takingPhoto = false;
     };
 
-    $scope.retryInitiateVideo = function () {
-      // TODO - angular error message shower thingy
-    }
+      $scope.retryInitiateVideo = function() {
+          // TODO - angular error message shower thingy
+      };
   }
 );
 

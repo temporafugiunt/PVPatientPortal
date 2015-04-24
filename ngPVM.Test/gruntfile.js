@@ -21,7 +21,10 @@
                     'currentApp': true,
                     'moment': true,
                     'btoa': true,
-                    'FileReader': true
+                    'FileReader': true,
+                    'navigator': true,
+                    'Peer': true,
+                    'URL': true
                 }
             }
         },
@@ -39,7 +42,8 @@
                         '../ngpvm.web/scripts/jquery-2.0.3.js',
                         '../ngpvm.web/scripts/angular/angular.js',
                         '../ngpvm.web/scripts/angular/angular-cookies.js',
-                        'https://code.angularjs.org/1.1.5/angular-mocks.js'
+                        'https://code.angularjs.org/1.1.5/angular-mocks.js',
+                        '../ngpvm.web/scripts/peerjs/peer.js'
                     ],
                 }
             }
