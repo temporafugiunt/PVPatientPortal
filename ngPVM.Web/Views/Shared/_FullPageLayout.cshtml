@@ -1,0 +1,31 @@
+﻿@using System.Web.Optimization
+@using ngPVM.Web.Helpers.Common
+<!DOCTYPE html>
+<html lang="en" @HtmlHelpers.AddNgAppDirectiveIfNgApp(ViewBag.NgApp)>
+<head>
+    <title>@ViewBag.PageTitle</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link rel="SHORTCUT ICON" href="@Url.Content("~/content/images/favicon.ico")"/>
+    @Styles.Render("~/Content/css")
+    @HtmlHelpers.RenderStylesIe("lte IE 8", "~/Content/ie7-css")
+    <script>
+        // Must be first. IE10 mobile viewport fix
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            var mq = "@@-ms-viewport{width:auto!important}";
+            msViewportStyle.appendChild(document.createTextNode(mq));
+            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+        }
+    </script>
+    @Scripts.Render("~/Scripts/modernizr")
+</head>
+    <body @HtmlHelpers.AddBodyCssClassIfExists(ViewBag.BodyCssClass)>
+        @RenderSection("PageContent", true)
+        
+        @Scripts.Render("~/Scripts/vendor")
+        @PageHelpers.AddNgResourcesIfNgApp(ViewBag.NgApp)
+        @HtmlHelpers.RenderScriptsIe("lte ie 9", "~/Scripts/ie8")
+    </body>
+</html>
