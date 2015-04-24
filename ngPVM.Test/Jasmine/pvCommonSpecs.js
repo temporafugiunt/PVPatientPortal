@@ -35,5 +35,69 @@
             });
         });
 
+        describe('managers', function() {
+
+            describe('pvMenuAndRouteManager', function () {
+
+                var pvMenuAndRouteManager = $injcetor.get('pvMenuAndRouteManager');
+
+                describe('menuItemClick', function() {
+                    it('should be in scope', function() {
+                        expect(pvMenuAndRouteManager.menuItemClick).not.toBe(undefined);
+                    });
+                });
+
+                describe('isSameRoute', function() {
+                    it('should identify identical routes', function() {
+                        var test1 = {
+                                ngRoute: 'test',
+                                ngApp: 'testApp',
+                                serverRoute: 'hello/world'
+                            },
+                            test2 = {
+                                ngRoute: 'test',
+                                ngApp: 'testApp',
+                                serverRoute: 'hello/world'
+                            },
+                            actual = pvMenuAndRouteManager.isSameRoute(test1, test2),
+                            expected = true;
+                        expect(actual).toBe(expected);
+                    });
+                    it('should sanitize and identify identical routes', function() {
+                        var test1 = {
+                                ngRoute: 'test/route',
+                                ngApp: 'testApp',
+                                serverRoute: 'hello/world'
+                            },
+                            test2 = {
+                                ngRoute: 'test/route/',
+                                ngApp: 'testApp',
+                                serverRoute: '/hello/world/'
+                            },
+                            actual = pvMenuAndRouteManager.isSameRoute(test1, test2),
+                            expected = true;
+                        expect(actual).toBe(expected);
+                    });
+                    it('should identify different routes', function () {
+                        var test1 = {
+                                ngRoute: 'test',
+                                ngApp: 'testApp',
+                                serverRoute: 'hello/world'
+                            },
+                            test2 = {
+                                ngRoute: 'blah',
+                                ngApp: 'testApp',
+                                serverRoute: 'hello/world'
+                            },
+                            actual = pvMenuAndRouteManager.isSameRoute(test1, test2),
+                            expected = false;
+                        expect(actual).toBe(expected);
+                    });
+                });
+
+            });
+
+        });
+
     });
 });
