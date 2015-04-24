@@ -56,7 +56,7 @@
         <div class="widget-body">
             <div class="widget-main">
                 <div class="row">
-                    <div class="col-lg-6 col-sm-12" ng-show="takingPhoto == false">
+                    <div class="col-lg-6 col-md-6 col-sm-12" ng-show="takingPhoto == false">
                         <div class="alert alert-info" ng-show="waitingForProvider == true">
                             <strong>Please Wait</strong>
                             The Provider has not yet connected or has diconnected.<br />
@@ -65,11 +65,11 @@
                         </div>
                         <video id="provider-video" autoplay></video>
                     </div>
-                    <div ng-show="videoInitialized == true" class=" col-lg-6 col-sm-12">
+                    <div ng-show="videoInitialized == true" class="col-lg-6 col-md-6 col-sm-12">
                         <video id="my-video" muted="true" autoplay></video>
                         <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="takePhoto()"><i class="icon-camera bigger-125 align-top"></i>Take Photo</button>
                     </div>
-                    <div ng-show="videoInitialized == true && takingPhoto == true" class="col-lg-6 col-sm-12">
+                    <div ng-show="videoInitialized == true && takingPhoto == true" class="col-lg-6 col-md-6 col-sm-12">
                         <canvas id="my-photo-canvas" ng-show="debug == true"></canvas>
                         <img id="my-photo" alt="Screen captures appear in this box.">
                         <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="sendPhoto()"><i class="icon-camera bigger-125 align-top"></i>Send Photo</button>

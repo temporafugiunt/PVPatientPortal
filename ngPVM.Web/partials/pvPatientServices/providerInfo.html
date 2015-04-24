@@ -68,14 +68,18 @@
         </div>
         <div class="widget-body">
             <div class="widget-main">
-                <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
-                <div class="alert alert-info" ng-show="waitingForPatient == true">
-                    <strong>Please Wait</strong>
-                    The Patient has not yet connected or has diconnected.<br />
-                    Appointment Time: {{appointmentTime}}
-                    <br>
+                <div class="col-lg-6 col-md-6 col-sm-12" ng-show="takingPhoto == false">
+                    <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
+                    <div class="alert alert-info" ng-show="waitingForPatient == true">
+                        <strong>Please Wait</strong>
+                        The Patient has not yet connected or has diconnected.<br />
+                        Appointment Time: {{appointmentTime}}
+                        <br>
+                    </div>
                 </div>
-                <video id="my-video" muted="true" autoplay></video>
+                <div ng-show="videoInitialized == true" class="col-lg-6 col-md-6 col-sm-12">
+                    <video id="my-video" muted="true" autoplay></video>
+                </div>
             </div>
         </div>
     </div>
