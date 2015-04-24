@@ -307,6 +307,9 @@ currentApp.controller('pvProviderInfoController',
 
       // Wait for stream on the call, then set peer video display
       $scope.existingCall.on('stream', function (stream) {
+        if ($scope.connectionError.indexOf("Patient not connected yet") != -1) {
+          $scope.connectionError = '';
+        }
         $('#patient-video').prop('src', URL.createObjectURL(stream));
         $scope.waitingForPatient = false;
         $scope.$apply();
