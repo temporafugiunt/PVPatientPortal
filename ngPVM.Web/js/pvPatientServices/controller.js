@@ -114,14 +114,15 @@ currentApp.controller('pvMyInfoController',
       });
     };
 
-      $scope.clearError = function() {
-          $scope.connectionError = '';
-      };
+    $scope.clearError = function() {
+      $scope.connectionError = '';
+    }
 
-      $scope.terminateAppointment = function() {
-          $scope.destroyConnection();
-          $scope.inAppointment = false;
-      };
+    $scope.terminateAppointment = function() {
+      $scope.destroyConnection();
+      $scope.inAppointment = false;
+      $scope.connectionError = '';
+    }
 
     $scope.takePhoto = function () {
       $scope.takingPhoto = true;
@@ -205,8 +206,15 @@ currentApp.controller('pvProviderInfoController',
     });
 
     $scope.peer.on('error', function (err) {
-      $scope.connectionError = err.message;
-      $scope.$apply();
+      if (err.message.indexOf("Could not connect to peer") != -1) {
+        $scope.connectionError = "Patient not connected yet, retrying...";
+        $scope.$apply();
+        $scope.callPatient();
+      } else {
+        $scope.connectionError = err.message;
+        $scope.$apply();
+      }
+      
     });
 
     $scope.connectionError = '';
@@ -214,7 +222,6 @@ currentApp.controller('pvProviderInfoController',
     $scope.waitingForPatient = false;
     $scope.lastConnectionId = '';
     $scope.videoInitialized = false;
-
     
     $scope.providerAppointmentList = {};
 
@@ -253,6 +260,7 @@ currentApp.controller('pvProviderInfoController',
     $scope.connectToAppointment = function (appointment) {
       $scope.destroyConnection();
       $scope.connectionError = '';
+      $scope.appointmentContext = appointment;
       $scope.inAppointment = true;
       $scope.waitingForPatient = true;
       $scope.patientLastName = appointment.lastName;
@@ -270,19 +278,7 @@ currentApp.controller('pvProviderInfoController',
         $scope.$apply();
         $log.info('Created local media stream.');
 
-        $scope.existingCall = $scope.peer.call(appointment.logDetailPk, $scope.localStream);
-
-        // Wait for stream on the call, then set peer video display
-        $scope.existingCall.on('stream', function (stream) {
-          $('#patient-video').prop('src', URL.createObjectURL(stream));
-          $scope.waitingForPatient = false;
-          $scope.$apply();
-        });
-
-        $scope.existingCall.on('close', function () {
-          $scope.waitingForPatient = true;
-          $scope.$apply();
-        });
+        $scope.callPatient();
 
       }, function () {
         $scope.inAppointment = false;
@@ -293,6 +289,22 @@ currentApp.controller('pvProviderInfoController',
       });
   };
 
+    $scope.callPatient = function() {
+      $scope.existingCall = $scope.peer.call($scope.appointmentContext.logDetailPk, $scope.localStream);
+
+      // Wait for stream on the call, then set peer video display
+      $scope.existingCall.on('stream', function (stream) {
+        $('#patient-video').prop('src', URL.createObjectURL(stream));
+        $scope.waitingForPatient = false;
+        $scope.$apply();
+      });
+
+      $scope.existingCall.on('close', function () {
+        $scope.waitingForPatient = true;
+        $scope.$apply();
+      });
+    };
+
     $scope.clearError = function() {
       $scope.connectionError = '';
     };
@@ -300,10 +312,7 @@ currentApp.controller('pvProviderInfoController',
     $scope.terminateAppointment = function() {
       $scope.destroyConnection();
       $scope.inAppointment = false;
-    };
-
-    $scope.retryInitiateVideo = function() {
-      // TODO - angular error message shower thingy
+      $scope.connectionError = '';
     };
   }
 );
