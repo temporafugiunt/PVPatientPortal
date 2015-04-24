@@ -9,6 +9,7 @@ currentApp.controller('pvMyInfoController',
     $scope.lastConnectionId = '';
     $scope.takingPhoto = false;
     $scope.appointmentContext = {};
+    $scope.videoInitialized = false;
 
     $log.info($route.current.controller + " executing.");
 
@@ -208,6 +209,8 @@ currentApp.controller('pvProviderInfoController',
     $scope.inAppointment = false;
     $scope.waitingForPatient = false;
     $scope.lastConnectionId = '';
+    $scope.videoInitialized = false;
+
     
     $scope.providerAppointmentList = {};
 
@@ -239,6 +242,7 @@ currentApp.controller('pvProviderInfoController',
       if (angular.isDefined($scope.localStream)) {
         $scope.localStream.stop();
         delete $scope.localStream;
+        $scope.videoInitialized = false;
       }
     };
 
@@ -258,6 +262,7 @@ currentApp.controller('pvProviderInfoController',
         // Set your video displays
         $('#my-video').prop('src', URL.createObjectURL(stream));
         $scope.localStream = stream;
+        $scope.videoInitialized = true;
         $scope.$apply();
         $log.info('Created local media stream.');
 
