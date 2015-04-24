@@ -9,7 +9,8 @@
         </strong>
         {{connectionError}}
         <br>
-    </div><div class="widget-box col-xs-12" ng-show="inAppointment != true">
+    </div>
+    <div class="widget-box col-xs-12" ng-show="inAppointment != true">
         <div class="widget-header widget-header-flat">
             <h4>Virtual Appointments</h4>
             <button type="submit" class="btn btn-sm btn-purple pull-right" ng-click="getAvailableVirtualEncounters()"><i class="icon-refresh align-top"></i>Refresh Appointments</button>
@@ -68,17 +69,19 @@
         </div>
         <div class="widget-body">
             <div class="widget-main">
-                <div class="col-lg-8 col-md-8 col-sm-12">
-                    <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
-                    <div class="alert alert-info" ng-show="waitingForPatient == true">
-                        <strong>Please Wait</strong>
-                        The Patient has not yet connected or has diconnected.<br />
-                        Appointment Time: {{appointmentTime}}
-                        <br>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12">
+                        <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
+                        <div class="alert alert-info" ng-show="waitingForPatient == true">
+                            <strong>Please Wait</strong>
+                            The Patient has not yet connected or has diconnected.<br />
+                            Appointment Time: {{appointmentTime}}
+                            <br>
+                        </div>
                     </div>
-                </div>
-                <div ng-show="videoInitialized == true" class="col-lg-4 col-md-4 col-sm-12">
-                    <video id="my-video" muted="true" autoplay></video>
+                    <div ng-show="videoInitialized == true" class="col-lg-4 col-md-4 col-sm-12">
+                        <video id="my-video" muted="true" autoplay></video>
+                    </div>
                 </div>
             </div>
         </div>

@@ -66,6 +66,49 @@ currentApp.controller('pvMyInfoController',
           $scope.localStream = stream;
           $scope.$apply();
           $log.info('Created local media stream.');
+
+          // PeerJS object
+          $scope.peer = new Peer(appointment.logDetailPk, { key: 'sao90qrgmbhs38fr', debug: 3 });
+
+          $scope.peer.on('open', function () {
+            $scope.lastConnectionId = $scope.peer.id;
+            $log.info("Opened connection with ID " + $scope.peer.id);
+            $scope.$apply();
+          });
+
+          // Receiving a call
+          $scope.peer.on('call', function (call) {
+            // Answer the call automatically
+            call.answer($scope.localStream);
+
+            // Hang up on an existing call if present
+            if (angular.isDefined($scope.existingCall)) {
+              $scope.existingCall.close();
+              delete $scope.existingCall;
+            }
+
+            // Wait for stream on the call, then set peer video display
+            call.on('stream', function (stream) {
+              $('#provider-video').prop('src', URL.createObjectURL(stream));
+              $scope.waitingForProvider = false;
+              $scope.$apply();
+            });
+
+            $scope.existingCall = call;
+            call.on('close', function () {
+              $scope.waitingForProvider = true;
+              $scope.$apply();
+            });
+          });
+          $scope.peer.on('error', function (err) {
+            if (err.message.indexOf("Failed to set local offer sdp:") != -1) {
+              // Bug in peer js, can be ignored.
+            } else {
+              $scope.connectionError = err.message;
+              $scope.$apply();
+            }
+          });
+
         }, function() {
           $scope.inAppointment = false;
           $scope.waitingForProvider = false;
@@ -75,43 +118,7 @@ currentApp.controller('pvMyInfoController',
         });
       }
 
-      //// PeerJS object
-      $scope.peer = new Peer(appointment.logDetailPk, { key: 'sao90qrgmbhs38fr', debug: 3 });
       
-      $scope.peer.on('open', function () {
-        $scope.lastConnectionId = $scope.peer.id;
-        $log.info("Opened connection with ID " + $scope.peer.id);
-        $scope.$apply();
-      });
-
-      // Receiving a call
-      $scope.peer.on('call', function (call) {
-        // Answer the call automatically
-        call.answer($scope.localStream);
-
-        // Hang up on an existing call if present
-        if (angular.isDefined($scope.existingCall)) {
-          $scope.existingCall.close();
-          delete $scope.existingCall;
-        }
-
-        // Wait for stream on the call, then set peer video display
-        call.on('stream', function(stream) {
-          $('#provider-video').prop('src', URL.createObjectURL(stream));
-          $scope.waitingForProvider = false;
-          $scope.$apply();
-        });
-
-        $scope.existingCall = call;
-        call.on('close', function () {
-          $scope.waitingForProvider = true;
-          $scope.$apply();
-        });
-      });
-      $scope.peer.on('error', function (err) {
-        $scope.connectionError = err.message;
-        $scope.$apply();
-      });
     };
 
     $scope.clearError = function() {
@@ -208,13 +215,12 @@ currentApp.controller('pvProviderInfoController',
     $scope.peer.on('error', function (err) {
       if (err.message.indexOf("Could not connect to peer") != -1) {
         $scope.connectionError = "Patient not connected yet, retrying...";
-        $scope.$apply();
         $scope.callPatient();
+        $scope.$apply();
       } else {
         $scope.connectionError = err.message;
         $scope.$apply();
       }
-      
     });
 
     $scope.connectionError = '';
@@ -289,11 +295,21 @@ currentApp.controller('pvProviderInfoController',
       });
   };
 
-    $scope.callPatient = function() {
-      $scope.existingCall = $scope.peer.call($scope.appointmentContext.logDetailPk, $scope.localStream);
+    $scope.callPatient = function () {
+      // Hang up on an existing call if present
+      if (angular.isDefined($scope.existingCall)) {
+        $scope.existingCall.close();
+        delete $scope.existingCall;
+      }
+
+      var call = $scope.peer.call($scope.appointmentContext.logDetailPk, $scope.localStream);
+      $scope.existingCall = call;
 
       // Wait for stream on the call, then set peer video display
       $scope.existingCall.on('stream', function (stream) {
+        if ($scope.connectionError.indexOf("Patient not connected yet") != -1) {
+          $scope.connectionError = '';
+        }
         $('#patient-video').prop('src', URL.createObjectURL(stream));
         $scope.waitingForPatient = false;
         $scope.$apply();
