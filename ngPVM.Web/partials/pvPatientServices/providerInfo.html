@@ -68,7 +68,7 @@
         </div>
         <div class="widget-body">
             <div class="widget-main">
-                <div class="col-lg-6 col-md-6 col-sm-12" ng-show="takingPhoto == false">
+                <div class="col-lg-8 col-md-8 col-sm-12" ng-show="takingPhoto == false">
                     <video id="patient-video" autoplay ng-hide="waitingForPatient == true"></video>
                     <div class="alert alert-info" ng-show="waitingForPatient == true">
                         <strong>Please Wait</strong>
@@ -77,7 +77,7 @@
                         <br>
                     </div>
                 </div>
-                <div ng-show="videoInitialized == true" class="col-lg-6 col-md-6 col-sm-12">
+                <div ng-show="videoInitialized == true" class="col-lg-4 col-md-4 col-sm-12">
                     <video id="my-video" muted="true" autoplay></video>
                 </div>
             </div>
