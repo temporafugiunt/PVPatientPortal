@@ -72,7 +72,10 @@
                     <div ng-show="videoInitialized == true && takingPhoto == true" class="col-lg-8 col-md-8 col-sm-12">
                         <canvas id="my-photo-canvas" ng-show="debug == true"></canvas>
                         <img id="my-photo" alt="Screen captures appear in this box.">
-                        <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="sendPhoto()"><i class="icon-camera bigger-125 align-top"></i>Send Photo</button>
+                        <div class="btn-group" style="display: block">
+                            <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="sendPhoto()"><i class="icon-camera bigger-125 align-top"></i>Send Photo</button> 
+                            <button type="submit" class="btn btn-danger btn-sm btn-block" ng-click="cancelSend()"><i class="icon-remove bigger-125 align-top"></i>Cancel</button>
+                        </div>                        
                     </div>
                 </div>
             </div>
