@@ -182,6 +182,10 @@ currentApp.controller('pvMyInfoController',
       $scope.takingPhoto = false;
     };
 
+    $scope.cancelSend = function () {
+        $scope.takingPhoto = false;
+    };
+
       $scope.retryInitiateVideo = function() {
           // TODO - angular error message shower thingy
       };
